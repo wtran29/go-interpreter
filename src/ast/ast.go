@@ -6,25 +6,30 @@ import (
 	"github.com/wtran29/go-interpreter/src/token"
 )
 
+// Node is the interface that all nodes in the AST implement.
 type Node interface {
-	TokenLiteral() string
-	String() string
+	TokenLiteral() string // Returns the literal value of the token associated with the node
+	String() string       // Returns a string representation of the node
 }
 
+// Statement represents a statement in the program.
 type Statement interface {
 	Node
-	statementNode()
+	statementNode() // Placeholder method to distinguish statement nodes from others
 }
 
+// Expression represents an expression in the program.
 type Expression interface {
 	Node
-	expressionNode()
+	expressionNode() // Placeholder method to distinguish expression nodes from others
 }
 
+// Program represents the entire program as a series of statements.
 type Program struct {
 	Statements []Statement
 }
 
+// TokenLiteral returns the token literal of the first statement in the program.
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()
@@ -33,6 +38,8 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
+// String returns a string representation of the entire program by concatenating
+// the string representations of each statement.
 func (p *Program) String() string {
 	var out bytes.Buffer
 
@@ -43,10 +50,11 @@ func (p *Program) String() string {
 	return out.String()
 }
 
+// LetStatement represents a 'let' statement.
 type LetStatement struct {
 	Token token.Token // the token.LET token
-	Name  *Identifier
-	Value Expression
+	Name  *Identifier // Identifier for the variable being declared
+	Value Expression  // Expression representing the value being assigned
 }
 
 func (ls *LetStatement) statementNode() {}
@@ -67,9 +75,10 @@ func (ls *LetStatement) String() string {
 	return out.String()
 }
 
+// Identifier represents an identifier (variable name).
 type Identifier struct {
 	Token token.Token // the token.IDENT token
-	Value string
+	Value string      // Value of the identifier
 }
 
 func (i *Identifier) expressionNode() {}
@@ -80,6 +89,7 @@ func (i *Identifier) String() string {
 	return i.Value
 }
 
+// ReturnStatement represents a 'return' statement.
 type ReturnStatement struct {
 	Token       token.Token // the 'return' token
 	ReturnValue Expression
@@ -101,6 +111,7 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
+// ExpressionStatement represents an expression used as a statement.
 type ExpressionStatement struct {
 	Token      token.Token // the first token of expression
 	Expression Expression
@@ -118,9 +129,10 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
+// IntegerLiteral represents an integer literal.
 type IntegerLiteral struct {
-	Token token.Token
-	Value int64
+	Token token.Token // The integer token
+	Value int64       // Value of the integer
 }
 
 func (il *IntegerLiteral) expressionNode() {}
@@ -132,6 +144,7 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
+// PrefixExpression represents a prefix expression (e.g. !x, -x).
 type PrefixExpression struct {
 	Token    token.Token // prefix token, e.g. ! or -
 	Operator string
@@ -154,6 +167,7 @@ func (pe *PrefixExpression) String() string {
 	return out.String()
 }
 
+// InfixExpression represents an infix expression (e.g. x + y, x < y).
 type InfixExpression struct {
 	Token    token.Token // The operator token, e.g. +
 	Left     Expression
