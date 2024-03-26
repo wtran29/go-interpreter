@@ -120,6 +120,7 @@ func (p *Parser) parseStatement() ast.Statement {
 
 // parseExpressionStatement parses an expression statement
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	defer untrace(trace("parseExpressionStatement"))
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 	stmt.Expression = p.parseExpression(LOWEST)
 
@@ -139,6 +140,7 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 
 // parseExpression parses an expression based on precedence
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	defer untrace(trace("parseExpression"))
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
@@ -241,6 +243,7 @@ func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 
 // parseIntegerLiteral parses an integer literal expression
 func (p *Parser) parseIntegerLiteral() ast.Expression {
+	defer untrace(trace("parseIntegerLiteral"))
 	lit := &ast.IntegerLiteral{Token: p.curToken}
 
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
@@ -255,6 +258,7 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 
 // parsePrefixExpression parses a prefix expression
 func (p *Parser) parsePrefixExpression() ast.Expression {
+	defer untrace(trace("parsePrefixExpression"))
 	expression := &ast.PrefixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
@@ -287,6 +291,7 @@ func (p *Parser) curPrecendence() int {
 // parseInfixExpression takes in an ast.Expression called left, the arguement is used
 // to create an *ast.InfixExpression node for the Left field and returns the expression.
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	defer untrace(trace("parseInfixExpression"))
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
