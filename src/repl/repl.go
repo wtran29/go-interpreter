@@ -9,6 +9,7 @@ import (
 
 	"github.com/wtran29/go-interpreter/src/evaluator"
 	"github.com/wtran29/go-interpreter/src/lexer"
+	"github.com/wtran29/go-interpreter/src/object"
 	"github.com/wtran29/go-interpreter/src/parser"
 )
 
@@ -40,6 +41,7 @@ func Start(in io.Reader, out io.Writer) {
 		line := scanner.Text()
 		l := lexer.New(line)
 		p := parser.New(l)
+		env := object.NewEnvironment()
 
 		program := p.ParseProgram()
 		if len(p.Errors()) != 0 {
@@ -47,7 +49,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")
