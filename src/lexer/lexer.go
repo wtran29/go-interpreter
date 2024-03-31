@@ -1,6 +1,10 @@
 package lexer
 
-import "github.com/wtran29/go-interpreter/src/token"
+import (
+	"fmt"
+
+	"github.com/wtran29/go-interpreter/src/token"
+)
 
 type Lexer struct {
 	input        string
@@ -81,6 +85,14 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LT, l.ch)
 	case '>':
 		tok = newToken(token.GT, l.ch)
+	case '"':
+		str, err := l.readString()
+		if err != nil {
+			tok = newToken(token.ILLEGAL, l.ch)
+			break
+		}
+		tok.Type = token.STRING
+		tok.Literal = str
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -133,4 +145,24 @@ func (l *Lexer) readNumber() string {
 
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
+}
+
+func (l *Lexer) readString() (string, error) {
+	position := l.position + 1
+	var escaped bool
+	for {
+		l.readChar()
+		if l.ch == '"' && !escaped {
+			break
+		}
+		if l.ch == 0 {
+			return "", fmt.Errorf("unexpected end of input, string literal not terminated")
+		}
+		if l.ch == '\\' && !escaped {
+			escaped = true
+			continue
+		}
+		escaped = false
+	}
+	return l.input[position:l.position], nil
 }
