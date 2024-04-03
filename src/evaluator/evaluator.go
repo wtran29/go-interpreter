@@ -261,11 +261,16 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 }
 
 func evalInfixExpression(operator string, left, right object.Object) object.Object {
+	// leftVal := left.(*object.String).Value
+	// rightVal := right.(*object.String).Value
+
+	// fmt.Println("Left String Value:", leftVal)
+	// fmt.Println("Right String Value:", rightVal)
 	switch {
-	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
-		return evalIntegerInfixExpression(operator, left, right)
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
 		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
+		return evalIntegerInfixExpression(operator, left, right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
@@ -304,12 +309,19 @@ func evalIntegerInfixExpression(operator string, left, right object.Object) obje
 }
 
 func evalStringInfixExpression(operator string, left, right object.Object) object.Object {
-	if operator != "+" {
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
-	}
 	leftVal := left.(*object.String).Value
 	rightVal := right.(*object.String).Value
-	return &object.String{Value: leftVal + rightVal}
+	switch operator {
+	case "==":
+		return nativeBoolToBooleanObject(leftVal == rightVal)
+	case "+":
+		return &object.String{Value: leftVal + rightVal}
+	default:
+		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+	}
+	// if operator != "+" {
+	// 	return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+	// }
 }
 
 func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Object {
