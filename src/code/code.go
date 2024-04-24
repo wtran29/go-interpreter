@@ -37,6 +37,7 @@ func Lookup(op byte) (*Definition, error) {
 	return def, nil
 }
 
+// Make easily build up bytecode instructions without having to check for errors for each call
 func Make(op Opcode, operands ...int) []byte {
 	def, ok := definitions[op]
 	if !ok {
