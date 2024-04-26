@@ -68,8 +68,9 @@ func Start(in io.Reader, out io.Writer) {
 			fmt.Fprintf(out, "Uh oh! Excuting bytecode failed:\n %s\n", err)
 			continue
 		}
-		stackTop := machine.StackTop()
-		io.WriteString(out, stackTop.Inspect())
+		// stackTop := machine.StackTop()
+		lastPopped := machine.LastPoppedStackElem()
+		io.WriteString(out, lastPopped.Inspect())
 		io.WriteString(out, "\n")
 	}
 }
