@@ -16,6 +16,7 @@ type Opcode byte
 // iota generate increasing byte values for us
 const (
 	OpConstant Opcode = iota
+	OpAdd
 )
 
 // Definition defines an Opcode
@@ -24,10 +25,9 @@ type Definition struct {
 	OperandWidths []int  //OperandWidths contains the number of bytes each operand takes up
 }
 
-// definition for OpConstant is that its only operand is two bytes wide
-// which makes it an uint16 and limits its maximum value to 65535
 var definitions = map[Opcode]*Definition{
-	OpConstant: {"OpConstant", []int{2}},
+	OpConstant: {"OpConstant", []int{2}}, // OpConstant is only operand is two bytes wide, makes it uint16, max value 65535
+	OpAdd:      {"OpAdd", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {
@@ -93,6 +93,8 @@ func (ins Instructions) fmtInstruction(def *Definition, operands []int) string {
 		return fmt.Sprintf("ERROR: operand len %d does not match defined %d\n", len(operands), operandCount)
 	}
 	switch operandCount {
+	case 0:
+		return def.Name
 	case 1:
 		return fmt.Sprintf("%s %d", def.Name, operands[0])
 	}
