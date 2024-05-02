@@ -36,6 +36,7 @@ func (s *SymbolTable) Define(name string) Symbol {
 	return symbol
 }
 
+// Resolve looks up an identifier within the symbol table and returns a Symbol
 func (s *SymbolTable) Resolve(name string) (Symbol, bool) {
 	obj, ok := s.store[name]
 	return obj, ok
