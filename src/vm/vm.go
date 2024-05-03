@@ -41,6 +41,13 @@ func New(bytecode *compiler.Bytecode) *VM {
 	}
 }
 
+// NewWithGlobalsStore is the new constructor for the vm
+func NewWithGlobalsStore(bytecode *compiler.Bytecode, s []object.Object) *VM {
+	vm := New(bytecode)
+	vm.globals = s
+	return vm
+}
+
 // StackTop returns the next free object in the stack
 func (vm *VM) StackTop() object.Object {
 	if vm.sp == 0 {
