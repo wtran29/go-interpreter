@@ -223,7 +223,7 @@ type Hashable interface {
 }
 
 // type CompiledFunction holds the instructions we get
-// from the compilation of a function literal
+// from the compiler to the VM as part of bytecode
 type CompiledFunction struct {
 	Instructions code.Instructions
 }
