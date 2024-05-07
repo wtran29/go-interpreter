@@ -8,7 +8,7 @@ import (
 type Frame struct {
 	fn          *object.CompiledFunction // points to the compiled function reference by frame
 	ip          int                      //instruction pointer in this frame, for this function
-	basePointer int                      // used to know how many loacals a function is going to use
+	basePointer int                      // used to know how many locals a function is going to use
 }
 
 func NewFrame(fn *object.CompiledFunction, basePointer int) *Frame {
