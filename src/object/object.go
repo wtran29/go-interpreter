@@ -225,8 +225,9 @@ type Hashable interface {
 // type CompiledFunction holds the instructions we get
 // from the compiler to the VM as part of bytecode
 type CompiledFunction struct {
-	Instructions code.Instructions
-	NumLocals    int // tells us how many local bindings this function is going to create
+	Instructions  code.Instructions
+	NumLocals     int // tells us how many local bindings this function is going to create
+	NumParameters int // number of parameters of a function literal
 }
 
 func (cf *CompiledFunction) Type() ObjectType {
