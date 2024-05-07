@@ -4,6 +4,7 @@ package compiler
 type SymbolScope string
 
 const (
+	LocalScope  SymbolScope = "LOCAL"
 	GlobalScope SymbolScope = "GLOBAL"
 )
 
@@ -18,8 +19,16 @@ type Symbol struct {
 // SymbolTable associates strings with Symbols in its store
 // and keeps track of numDefinitions it has.
 type SymbolTable struct {
+	Outer *SymbolTable
+
 	store          map[string]Symbol
 	numDefinitions int
+}
+
+func NewEnclosedSymbolTable(outer *SymbolTable) *SymbolTable {
+	s := NewSymbolTable()
+	s.Outer = outer
+	return s
 }
 
 // NewSymbolTable returns an instance of SymbolTable
