@@ -363,7 +363,7 @@ func testStringObject(expected string, actual object.Object) error {
 	return nil
 }
 
-func TestCallingFunctionsWithBindings(t *testing.T){
+func TestCallingFunctionsWithBindings(t *testing.T) {
 	tests := []vmTestCase{
 		{
 			input: `
@@ -378,24 +378,24 @@ func TestCallingFunctionsWithBindings(t *testing.T){
 			oneAndTwo();
 			`,
 			expected: 3,
-			},
-			{
+		},
+		{
 			input: `
 			let oneAndTwo = fn() { let one = 1; let two = 2; one + two; };
 			let threeAndFour = fn() { let three = 3; let four = 4; three + four; };
 			oneAndTwo() + threeAndFour();
 			`,
 			expected: 10,
-			},
-			{
+		},
+		{
 			input: `
 			let firstFoobar = fn() { let foobar = 50; foobar; };
 			let secondFoobar = fn() { let foobar = 100; foobar; };
 			firstFoobar() + secondFoobar();
 			`,
 			expected: 150,
-			},
-			{
+		},
+		{
 			input: `
 			let globalSeed = 50;
 			let minusOne = fn() {
@@ -409,7 +409,17 @@ func TestCallingFunctionsWithBindings(t *testing.T){
 			minusOne() + minusTwo();
 			`,
 			expected: 97,
-			},
+		},
+		{
+			input: `
+			let returnsOneReturner = fn() {
+			let returnsOne = fn() { 1; };
+			returnsOne;
+			};
+			returnsOneReturner()();
+			`,
+			expected: 1,
+		},
 	}
 	runVmTests(t, tests)
 }
