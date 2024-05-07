@@ -39,7 +39,12 @@ func NewSymbolTable() *SymbolTable {
 
 // Define takes an identifier as an argument, create definition and return a Symbol
 func (s *SymbolTable) Define(name string) Symbol {
-	symbol := Symbol{Name: name, Index: s.numDefinitions, Scope: GlobalScope}
+	symbol := Symbol{Name: name, Index: s.numDefinitions}
+	if s.Outer == nil {
+		symbol.Scope = GlobalScope
+	} else {
+		symbol.Scope = LocalScope
+	}
 	s.store[name] = symbol
 	s.numDefinitions++
 	return symbol
@@ -48,5 +53,9 @@ func (s *SymbolTable) Define(name string) Symbol {
 // Resolve looks up an identifier within the symbol table and returns a Symbol
 func (s *SymbolTable) Resolve(name string) (Symbol, bool) {
 	obj, ok := s.store[name]
+	if !ok && s.Outer != nil {
+		obj, ok = s.Outer.Resolve(name)
+		return obj, ok
+	}
 	return obj, ok
 }
