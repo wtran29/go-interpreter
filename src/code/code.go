@@ -71,7 +71,7 @@ var definitions = map[Opcode]*Definition{
 	OpArray:         {"OpArray", []int{2}},
 	OpHash:          {"OpHash", []int{2}},
 	OpIndex:         {"OpIndex", []int{}},
-	OpCall:          {"OpCall", []int{}},        // tell the VM to start executing object.CompiledFunction on top of stack
+	OpCall:          {"OpCall", []int{1}},       // tell the VM to start executing object.CompiledFunction on top of stack
 	OpReturnValue:   {"OpReturnValue", []int{}}, // tell the VM to return the value on top of the stack to calling context to resume execution
 	OpReturn:        {"OpReturn", []int{}},      //same as code.OpReturnValue but there is no explicit value to return but implicit vm.Null
 	OpGetLocal:      {"OpGetLocal", []int{1}},
