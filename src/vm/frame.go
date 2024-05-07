@@ -6,12 +6,18 @@ import (
 )
 
 type Frame struct {
-	fn *object.CompiledFunction // points to the compiled function reference by frame
-	ip int //instruction pointer in this frame, for this function
+	fn          *object.CompiledFunction // points to the compiled function reference by frame
+	ip          int                      //instruction pointer in this frame, for this function
+	basePointer int                      // used to know how many loacals a function is going to use
 }
 
-func NewFrame(fn *object.CompiledFunction) *Frame {
-	return &Frame{fn: fn, ip: -1}
+func NewFrame(fn *object.CompiledFunction, basePointer int) *Frame {
+	f := &Frame{
+		fn:          fn,
+		ip:          -1,
+		basePointer: basePointer,
+	}
+	return f
 }
 
 func (f *Frame) Instructions() code.Instructions {
