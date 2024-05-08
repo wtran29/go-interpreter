@@ -25,7 +25,7 @@ const (
 	ARRAY_OBJ             = "ARRAY"
 	HASH_OBJ              = "HASH"
 	COMPILED_FUNCTION_OBJ = "COMPILED_FUNCTION_OBJ"
-	CLOSURE_OBJ = "CLOSURE"
+	CLOSURE_OBJ           = "CLOSURE"
 )
 
 // Object represents every value encountered
@@ -240,15 +240,14 @@ func (cf *CompiledFunction) Inspect() string {
 }
 
 type Closure struct {
-	Fn *CompiledFunction
+	Fn   *CompiledFunction
 	Free []Object
 }
 
-func (c *Closure) Type() ObjectType { 
-	return CLOSURE_OBJ 
+func (c *Closure) Type() ObjectType {
+	return CLOSURE_OBJ
 }
 
 func (c *Closure) Inspect() string {
 	return fmt.Sprintf("Closure[%p]", c)
 }
-
