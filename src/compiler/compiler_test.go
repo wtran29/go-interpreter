@@ -910,7 +910,7 @@ func testIntegerObject(expected int64, actual object.Object) error {
 	return nil
 }
 
-func TestClosures(t *testing.T) {
+func TestClosure(t *testing.T) {
 	tests := []compilerTestCase{
 		{
 			input: `
@@ -977,16 +977,16 @@ func TestClosures(t *testing.T) {
 		{
 			input: `
 			let global = 55;
-
+		
 			fn() {
 				let a = 66;
-
+		
 				fn() {
 					let b = 77;
-
+		
 					fn() {
 						let c = 88;
-
+		
 						global + a + b + c;
 					}
 				}
@@ -1000,7 +1000,7 @@ func TestClosures(t *testing.T) {
 				[]code.Instructions{
 					code.Make(code.OpConstant, 3),
 					code.Make(code.OpSetLocal, 0),
-					code.Make(code.OpGetLocal, 0),
+					code.Make(code.OpGetGlobal, 0),
 					code.Make(code.OpGetFree, 0),
 					code.Make(code.OpAdd),
 					code.Make(code.OpGetFree, 1),
@@ -1033,5 +1033,6 @@ func TestClosures(t *testing.T) {
 			},
 		},
 	}
+
 	runCompilerTests(t, tests)
 }
