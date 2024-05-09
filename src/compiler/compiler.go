@@ -169,11 +169,11 @@ func (c *Compiler) Compile(node ast.Node) error {
 			}
 		}
 	case *ast.LetStatement:
+		symbol := c.symbolTable.Define(node.Name.Value)
 		err := c.Compile(node.Value)
 		if err != nil {
 			return err
 		}
-		symbol := c.symbolTable.Define(node.Name.Value)
 		if symbol.Scope == GlobalScope {
 			c.emit(code.OpSetGlobal, symbol.Index)
 		} else {
@@ -262,7 +262,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 		}
 		fnIndex := c.addConstant(compiledFn)
 		c.emit(code.OpClosure, fnIndex, len(freeSymbols))
-	
+
 	case *ast.ReturnStatement:
 		err := c.Compile(node.ReturnValue)
 		if err != nil {
