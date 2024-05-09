@@ -47,8 +47,7 @@ var Builtins = []struct {
 				fmt.Println(arg.Inspect())
 			}
 			return nil
-		},
-		},
+		}},
 	},
 	{
 		// last will return the last element of the given array
